@@ -4,8 +4,10 @@ import rx.Observable;
 import rx.Subscriber;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Лера on 19.01.2017.
@@ -40,7 +42,6 @@ public class RxLogic {
                 if (element == '|')
                     k++;
             if (k == 14) {
-                //System.out.println(str);
                 writeCassandra(partitionString(str), ses);
             }
         }
@@ -48,21 +49,9 @@ public class RxLogic {
     }
 
     private void writeCassandra(InitialData ob, Session ses) {
-        ses.execute("INSERT INTO practice_2017.practice_2017 (pspaynum,account,errcode,errtext,flags,indate,instatus,parentpayid,payamount,paytype,servcode,servtype,termid,totalpayamount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                ob.psPayNum.toString(),
-                ob.account.toString(),
-                ob.errCode.toString(),
-                ob.errText.toString(),
-                ob.flags.toString(),
-                ob.inDate.toString(),
-                ob.inStatus.toString(),
-                ob.parentPayId.toString(),
-                ob.payAmount.toString(),
-                ob.payType.toString(),
-                ob.servCode.toString(),
-                ob.servType.toString(),
-                ob.termId.toString(),
-                ob.totalPayAmount.toString());
+        ses.execute("INSERT INTO practice_2017.practice_2017 (pspaynum,account,errcode,errtext,flags,indate,instatus,parentpayid,payamount,paytype,servcode,servtype,termid,totalpayamount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?) IF NOT EXISTS",
+                ob.psPayNum, ob.account, ob.errCode, ob.errText, ob.flags, ob.inDate, ob.inStatus,
+                ob.parentPayId, ob.payAmount, ob.payType, ob.servCode, ob.servType,ob.termId,ob.totalPayAmount);
     }
 
     private InitialData partitionString(String initialDataString) {
@@ -70,5 +59,22 @@ public class RxLogic {
         InitialData obj = new InitialData(s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7], s[8], s[9],
                 s[10], s[11], s[12], s[13].substring(0, s[13].length() - 1));
         return obj;
+    }
+
+    public boolean correctData(List<String> data) {
+        boolean f = false;
+
+        File file = new File(data.get(0));
+        if (file.exists()) {
+            f = true;
+            int k = 0;
+            for (char element : data.get(1).toCharArray())
+                if (element == '.')
+                    k++;
+            if (k != 3) {
+                f = false;
+            }
+        }
+        return f;
     }
 }
