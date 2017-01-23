@@ -10,32 +10,31 @@ import java.util.List;
  * Created by Лера on 19.01.2017.
  */
 public class Main {
-    public static void main(String[] args) throws IOException {
-        String fileName = "InitialData.txt";
-        File file = new File(fileName);
-        if (file.exists()) {
-            BufferedReader reader = new BufferedReader(new FileReader(fileName));
-            List<String> data = new ArrayList<String>();
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                data.add(line);
-            }
-            RxLogic rxLogic = new RxLogic();
 
-            if (rxLogic.correctData(data)) {
+    public static String fileName = null;
+    public static String serverIP = null;
+    public static String keyspace = null;
+    public static String login = null;
+    public static String password = null;
+
+    public static void main(String[] args) throws IOException {
+        File f = new File("InitialData.ini");
+        if (f.exists()) {
+            new ReadConfig(f);
+            RxLogic rxLogic = new RxLogic();
+            if (rxLogic.correctData(fileName, serverIP, keyspace, login, password)) {
                 Cluster cluster = Cluster.builder()
-                        .addContactPoints(data.get(1))
-                        .withCredentials(data.get(3),data.get(4))
+                        .addContactPoints(serverIP)
+                        .withCredentials(login, password)
                         .withPort(9042)
                         .build();
-                Session session = cluster.connect(data.get(2));
-                rxLogic.processData(data.get(0), session);
+                Session session = cluster.connect(keyspace);
+                rxLogic.processData(fileName, session);
                 cluster.close();
-            }
-            else
+            } else
                 System.out.println("В файле содержатся некорректные данные!");
         }
         else
-            System.out.println("Файл с исходными данными не найден!");
+            System.out.println("Файл с исходными данными не найден");
     }
 }

@@ -42,7 +42,7 @@ public class RxLogic {
                 if (element == '|')
                     k++;
             if (k == 14) {
-                writeCassandra(partitionString(str), ses);
+                //writeCassandra(partitionString(str), ses);
             }
         }
         else System.out.println("Incorrect line: " + str);
@@ -61,18 +61,19 @@ public class RxLogic {
         return obj;
     }
 
-    public boolean correctData(List<String> data) {
+    public boolean correctData(String name, String IP, String space, String login, String password) {
         boolean f = false;
-
-        File file = new File(data.get(0));
-        if (file.exists()) {
-            f = true;
-            int k = 0;
-            for (char element : data.get(1).toCharArray())
-                if (element == '.')
-                    k++;
-            if (k != 3) {
-                f = false;
+        if (name != null && IP != null && space != null && login != null && password != null){
+            File file = new File(name);
+            if (file.exists()) {
+                f = true;
+                int k = 0;
+                for (char element : IP.toCharArray())
+                    if (element == '.')
+                        k++;
+                if (k != 3) {
+                    f = false;
+                }
             }
         }
         return f;
