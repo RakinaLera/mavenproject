@@ -39,7 +39,7 @@ public class RxLogic {
                 if (element == '|')
                     k++;
             if (k == 14) {
-                //writeCassandra(partitionString(str), ses);
+                writeCassandra(partitionString(str), ses);
             }
         }
         else System.out.println("Incorrect line: " + str);
