@@ -90,6 +90,12 @@
             <version>4.0.37.Final</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.emaginalabs</groupId>
+            <artifactId>config-parser</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>

@@ -1,13 +1,10 @@
-import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Session;
 import rx.Observable;
-import rx.Subscriber;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by Лера on 19.01.2017.
